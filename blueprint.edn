@@ -1,0 +1,10 @@
+{:itonami.blueprint/id "cloud-itonami-isco-1223"
+ :itonami.blueprint/name "Independent Research & Development Management Practice"
+ :itonami.blueprint/isco-08 "1223"
+ :itonami.blueprint/domain :management/research-development-management
+ :itonami.blueprint/license "AGPL-3.0-or-later"
+ :itonami.blueprint/social-impact [:local-jobs :innovation-access :accountability]
+ :itonami.blueprint/governor :rd-management-governor
+ :itonami.blueprint/robotics true
+ :itonami.blueprint/required-technologies [:robotics :identity :forms :dmn :bpmn :audit-ledger]
+ :itonami.blueprint/status :public-oss}
