@@ -60,15 +60,15 @@ human-in-the-loop interrupt/resume via checkpointing.
                                            +-> :hold               (:hard? true)
 ```
 
-- `src/rd_management/store.cljc` — `Store` protocol + `MemStore`:
+- `src/rd_management/store.kotoba` — `Store` protocol + `MemStore`:
   registered projects, committed records, an append-only audit ledger.
-- `src/rd_management/advisor.cljc` — `Advisor` protocol; `mock-advisor`
+- `src/rd_management/advisor.kotoba` — `Advisor` protocol; `mock-advisor`
   (deterministic, default) proposes an R&D operation from a request;
   `llm-advisor` wraps a `langchain.model/ChatModel` — either way the
   advisor only ever produces a `:propose`-effect proposal, never a
   committed record, and LLM parse failures always yield `confidence 0.0`
   (forces escalation, never fabricated confidence).
-- `src/rd_management/governor.cljc` — `RDManagementGovernor/check`: a
+- `src/rd_management/governor.kotoba` — `RDManagementGovernor/check`: a
   pure function, wired as its own `:govern` node. Hard invariants
   (unregistered project, a proposal whose `:effect` isn't `:propose`)
   always route to `:hold`. Escalation invariants
@@ -79,7 +79,7 @@ human-in-the-loop interrupt/resume via checkpointing.
   robotics-premise statement that approving a hazardous-material
   experiment protocol and releasing unpublished research data always
   require human sign-off.
-- `src/rd_management/actor.cljc` — `build-graph`, `run-request!`,
+- `src/rd_management/actor.kotoba` — `build-graph`, `run-request!`,
   `approve!`: the `langgraph.graph/state-graph` wiring itself.
 
 ```bash
