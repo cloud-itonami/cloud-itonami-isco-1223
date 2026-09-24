@@ -1,0 +1,34 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:physics` runs it.
+;;
+;; README "Robotics premise": a lab-walkthrough robot performs equipment-status
+;; checks and experiment-evidence capture for research and development
+;; managers (ISCO 1223). Its physical work is moving through the lab with
+;; loads it must not spill -- a liquid-nitrogen dewar on its deck -- and one
+;; of its equipment checks is whether an ultra-low freezer's cabinet wall
+;; stays warm enough outside not to sweat.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isco-1223"
+ :cases
+ [{:id :dewar-transfer-stop
+   :kind :transport
+   :procedure "lab robot carries a full 35 L liquid-nitrogen dewar 50 m along the lab corridor and must stop when a door opens in front of it"
+   :params {:mass-kg 60.0 :payload-kg 45.0 :distance-m 50.0 :v-max-mps 0.8 :a-max-mps2 0.3
+            :drive-force-n 150.0 :crr 0.015 :cog-height-m 0.70 :support-half-length-m 0.30}
+   :sweep {:param :brake-decel-mps2 :values [0.4 0.8 1.4 2.0 2.6]}
+   :quantity :min-tipover-margin
+   :limit {:min 0.5 :basis "estimate: a cryogen-carrying platform keeps half its static tip-over moment in reserve (sloshing and door thresholds)"}
+   :boundary {:lo 0.2 :hi 3.0}}
+  {:id :ult-freezer-wall-sweat
+   :kind :thermal
+   :procedure "equipment check: polyurethane-foam cabinet wall of a -80 C ultra-low freezer in a 22 C lab after 48 h running; outer surface must stay above the room dew point"
+   :params {:conductivity-w-mk 0.022 :density-kg-m3 40.0 :specific-heat-j-kgk 1400.0
+            :t0-c 22.0 :t-hot-c 22.0 :h-front-w-m2k 8.0 :t-back-ambient-c -80.0 :h-back-w-m2k 5.0
+            :threshold-c 30.0 :duration-s 172800.0 :nodes 21}
+   :sweep {:param :thickness-m :values [0.015 0.025 0.040 0.080 0.130]}
+   :quantity :final-front-c
+   :limit {:min 14.0 :basis "estimate: dew point of 22 C lab air at about 60 % relative humidity is ~14 C; a colder outer skin sweats"}
+   :boundary {:lo 0.01 :hi 0.2}}]}
